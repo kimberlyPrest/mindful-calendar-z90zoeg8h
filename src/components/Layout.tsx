@@ -22,26 +22,30 @@ function MainLayout() {
           <Link
             to="/"
             className={cn(
-              "group w-full aspect-square rounded-2xl flex flex-col items-center justify-center transition-all",
-              location.pathname === "/"
-                ? "text-primary bg-primary/10 font-bold"
-                : "text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-white/5"
+              'group w-full aspect-square rounded-2xl flex flex-col items-center justify-center transition-all',
+              location.pathname === '/'
+                ? 'text-primary bg-primary/10 font-bold'
+                : 'text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-white/5',
             )}
           >
-            <span className="material-icons-round text-2xl mb-1">calendar_today</span>
+            <span className="material-icons-round text-2xl mb-1">
+              calendar_today
+            </span>
             <span className="text-[10px]">Month</span>
           </Link>
 
           <Link
             to="/focus"
             className={cn(
-              "group w-full aspect-square rounded-2xl flex flex-col items-center justify-center transition-all",
-              location.pathname === "/focus"
-                ? "text-primary bg-primary/10 font-bold"
-                : "text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-white/5"
+              'group w-full aspect-square rounded-2xl flex flex-col items-center justify-center transition-all',
+              location.pathname === '/focus'
+                ? 'text-primary bg-primary/10 font-bold'
+                : 'text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-white/5',
             )}
           >
-            <span className="material-icons-round text-2xl mb-1">pie_chart_outline</span>
+            <span className="material-icons-round text-2xl mb-1">
+              pie_chart_outline
+            </span>
             <span className="text-[10px]">Focus</span>
           </Link>
         </div>
@@ -51,7 +55,9 @@ function MainLayout() {
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary transition-colors"
           >
-            <span className="material-icons-round">{theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
+            <span className="material-icons-round">
+              {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+            </span>
           </button>
           <div className="relative group cursor-pointer">
             <img

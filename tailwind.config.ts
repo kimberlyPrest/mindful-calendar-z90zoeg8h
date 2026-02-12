@@ -26,7 +26,14 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Manrope', 'Quicksand', 'Outfit', 'Inter var', 'system-ui', 'sans-serif'],
+        sans: [
+          'Manrope',
+          'Quicksand',
+          'Outfit',
+          'Inter var',
+          'system-ui',
+          'sans-serif',
+        ],
         display: [
           'Manrope',
           'Quicksand',
@@ -47,12 +54,12 @@ export default {
           foreground: '#ffffff',
           dark: '#1299a6',
         },
-        "background-light": "#f6f8f8",
-        "background-dark": "#112021",
-        "warm-orange": "#ffd8be",
-        "soft-blue": "#ccebf3",
-        "muted-yellow": "#fcf5c7",
-        "calm-purple": "#e0dcf5",
+        'background-light': '#f6f8f8',
+        'background-dark': '#112021',
+        'warm-orange': '#ffd8be',
+        'soft-blue': '#ccebf3',
+        'muted-yellow': '#fcf5c7',
+        'calm-purple': '#e0dcf5',
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',

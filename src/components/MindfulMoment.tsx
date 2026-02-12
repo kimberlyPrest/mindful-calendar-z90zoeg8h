@@ -23,7 +23,7 @@ export const MindfulMoment = () => {
     <div className="bg-white/50 dark:bg-card/50 backdrop-blur-sm rounded-[24px] p-4 flex flex-col items-center justify-center text-center shadow-soft border border-border/50">
       <div
         className={cn(
-          'w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center text-accent mb-2 cursor-pointer transition-all duration-[4000ms] ease-in-out',
+          'w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center text-accent mb-2 cursor-pointer transition-all duration-4000 ease-in-out',
           isBreathing && 'scale-125 bg-accent/30',
         )}
         onClick={() => setIsBreathing(!isBreathing)}

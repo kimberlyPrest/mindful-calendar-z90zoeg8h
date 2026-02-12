@@ -16,6 +16,15 @@ import {
 import { ptBR } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 import { EventModal } from '@/components/EventModal'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Plus,
+  Play,
+  Quote,
+  Clock,
+} from 'lucide-react'
 
 export default function MonthPage() {
   const { events, viewDate, setViewDate, categories } = useCalendarStore()
@@ -65,9 +74,7 @@ export default function MonthPage() {
                 onClick={handlePrevMonth}
                 className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
               >
-                <span className="material-icons-round text-lg">
-                  chevron_left
-                </span>
+                <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={handleTodayBtn}
@@ -79,17 +86,13 @@ export default function MonthPage() {
                 onClick={handleNextMonth}
                 className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
               >
-                <span className="material-icons-round text-lg">
-                  chevron_right
-                </span>
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
-              <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                search
-              </span>
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
               <input
                 className="pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-full text-sm w-64 shadow-sm focus:ring-2 focus:ring-primary/50 placeholder-slate-400 dark:text-white"
                 placeholder="Pesquisar eventos..."
@@ -100,7 +103,7 @@ export default function MonthPage() {
               onClick={() => setIsCreateOpen(true)}
               className="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-primary/30 flex items-center gap-2 transition-all transform active:scale-95"
             >
-              <span className="material-icons-round text-xl leading-none">add</span>
+              <Plus className="w-5 h-5" />
               <span>Novo Evento</span>
             </button>
           </div>
@@ -153,7 +156,7 @@ export default function MonthPage() {
                       {format(day, 'd')}
                     </span>
                     <button className="add-btn opacity-0 w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary hover:text-white text-slate-400 flex items-center justify-center transition-all">
-                      <span className="material-icons-round text-sm">add</span>
+                      <Plus className="w-3 h-3" />
                     </button>
                   </div>
 
@@ -186,13 +189,16 @@ export default function MonthPage() {
                               {format(new Date(event.start), 'HH:mm')}
                             </span>
                           </div>
-                        )
-                      })}
-                    </div>
+                          <div className="text-xs font-bold truncate text-slate-800 dark:text-slate-200">
+                            {event.title}
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
-                )
-              })}
-            </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -220,7 +226,7 @@ export default function MonthPage() {
               <div className="absolute inset-0 bg-primary/10 mix-blend-overlay"></div>
             </div>
             <button className="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 transform active:scale-95 leading-none">
-              <span className="material-icons-round text-lg leading-none">play_arrow</span>
+              <Play className="w-5 h-5" />
               Iniciar foco de 5m
             </button>
           </div>
@@ -270,9 +276,7 @@ export default function MonthPage() {
                       {event.title}
                     </h4>
                     <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs">
-                      <span className="material-icons-round text-sm">
-                        schedule
-                      </span>
+                      <Clock className="w-4 h-4" />
                       {format(new Date(event.start), 'HH:mm')} -{' '}
                       {format(new Date(event.end), 'HH:mm')}
                     </div>
@@ -288,9 +292,7 @@ export default function MonthPage() {
         </div>
 
         <div className="mt-auto bg-muted-yellow/30 dark:bg-yellow-900/10 p-5 rounded-2xl border border-yellow-100 dark:border-yellow-800/30">
-          <span className="material-icons-round text-yellow-600/50 dark:text-yellow-500/50 text-3xl mb-2 block">
-            format_quote
-          </span>
+          <Quote className="text-yellow-600/50 dark:text-yellow-500/50 w-8 h-8 mb-2 block" />
           <p className="text-sm font-medium text-slate-700 dark:text-slate-300 italic mb-2">
             "The present moment is filled with joy and happiness. If you are
             attentive, you will see it."

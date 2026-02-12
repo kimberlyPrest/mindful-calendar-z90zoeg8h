@@ -1,26 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import {
-  Calendar as CalendarIcon,
-  Clock,
-  Type,
-  AlignLeft,
-  Bell,
-} from 'lucide-react'
-
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
@@ -29,30 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Switch } from '@/components/ui/switch'
 import useCalendarStore from '@/stores/useCalendarStore'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
-
-const eventSchema = z.object({
-  title: z.string().min(1, 'O título é obrigatório'),
-  date: z.string().min(1, 'Data é obrigatória'),
-  startTime: z.string().min(1, 'Hora de início é obrigatória'),
-  endTime: z.string().min(1, 'Hora de término é obrigatória'),
-  categoryId: z.string().min(1, 'Categoria é obrigatória'),
-  description: z.string().optional(),
-  reminder: z.boolean().default(false),
-})
-
-type EventFormValues = z.infer<typeof eventSchema>
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import { Trash2 } from 'lucide-react'
 
 interface EventModalProps {
   isOpen: boolean
@@ -61,268 +30,180 @@ interface EventModalProps {
   eventId?: string
 }
 
-export const EventModal = ({
+export function EventModal({
   isOpen,
   onClose,
   initialDate,
   eventId,
-}: EventModalProps) => {
-  const { categories, addEvent, updateEvent, events } = useCalendarStore()
-  const [isAnimating, setIsAnimating] = useState(false)
+}: EventModalProps) {
+  const { addEvent, updateEvent, deleteEvent, events, categories } =
+    useCalendarStore()
 
-  const existingEvent = eventId ? events.find((e) => e.id === eventId) : null
-
-  const form = useForm<EventFormValues>({
-    resolver: zodResolver(eventSchema),
-    defaultValues: {
-      title: '',
-      date: format(new Date(), 'yyyy-MM-dd'),
-      startTime: '09:00',
-      endTime: '10:00',
-      categoryId: categories[0]?.id || '',
-      description: '',
-      reminder: false,
-    },
-  })
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [categoryId, setCategoryId] = useState('')
+  const [startTime, setStartTime] = useState('09:00')
+  const [endTime, setEndTime] = useState('10:00')
 
   useEffect(() => {
     if (isOpen) {
-      if (existingEvent) {
-        form.reset({
-          title: existingEvent.title,
-          date: format(existingEvent.start, 'yyyy-MM-dd'),
-          startTime: format(existingEvent.start, 'HH:mm'),
-          endTime: format(existingEvent.end, 'HH:mm'),
-          categoryId: existingEvent.categoryId,
-          description: existingEvent.description || '',
-          reminder: false,
-        })
-      } else if (initialDate) {
-        form.reset({
-          title: '',
-          date: format(initialDate, 'yyyy-MM-dd'),
-          startTime: format(new Date(), 'HH:mm'),
-          endTime: format(
-            new Date(new Date().setHours(new Date().getHours() + 1)),
-            'HH:mm',
-          ),
-          categoryId: categories[0]?.id || '',
-          description: '',
-          reminder: false,
-        })
+      if (eventId) {
+        const event = events.find((e) => e.id === eventId)
+        if (event) {
+          setTitle(event.title)
+          setDescription(event.description || '')
+          setCategoryId(event.categoryId)
+          setStartTime(format(new Date(event.start), 'HH:mm'))
+          setEndTime(format(new Date(event.end), 'HH:mm'))
+        }
+      } else {
+        setTitle('')
+        setDescription('')
+        setCategoryId(categories[0]?.id || '')
+        setStartTime('09:00')
+        setEndTime('10:00')
       }
     }
-  }, [isOpen, initialDate, existingEvent, form, categories])
+  }, [isOpen, eventId, events, categories])
 
-  const onSubmit = (data: EventFormValues) => {
-    setIsAnimating(true)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
 
-    const startDateTime = new Date(`${data.date}T${data.startTime}`)
-    const endDateTime = new Date(`${data.date}T${data.endTime}`)
+    const baseDate = initialDate || new Date()
+    const [startHour, startMinute] = startTime.split(':').map(Number)
+    const [endHour, endMinute] = endTime.split(':').map(Number)
 
-    if (endDateTime <= startDateTime) {
-      form.setError('endTime', {
-        message: 'O término deve ser depois do início',
+    const start = new Date(baseDate)
+    start.setHours(startHour, startMinute, 0, 0)
+
+    const end = new Date(baseDate)
+    end.setHours(endHour, endMinute, 0, 0)
+
+    if (eventId) {
+      updateEvent(eventId, {
+        title,
+        description,
+        categoryId,
+        start,
+        end,
       })
-      setIsAnimating(false)
-      return
-    }
-
-    const eventData = {
-      title: data.title,
-      description: data.description,
-      start: startDateTime,
-      end: endDateTime,
-      categoryId: data.categoryId,
-    }
-
-    if (existingEvent) {
-      updateEvent(existingEvent.id, eventData)
-      toast.success('Evento atualizado com sucesso!')
     } else {
-      addEvent(eventData)
-      toast.success('Novo evento criado!')
+      addEvent({
+        title,
+        description,
+        categoryId,
+        start,
+        end,
+        completed: false,
+      })
     }
+    onClose()
+  }
 
-    setTimeout(() => {
-      setIsAnimating(false)
+  const handleDelete = () => {
+    if (eventId) {
+      deleteEvent(eventId)
       onClose()
-    }, 300)
+    }
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] rounded-[24px] border-none shadow-2xl bg-[#FFF8F0] dark:bg-card p-6 overflow-hidden">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center text-primary mb-2">
-            {existingEvent ? 'Editar Evento' : 'Novo Evento'}
-          </DialogTitle>
+          <DialogTitle>{eventId ? 'Editar Evento' : 'Novo Evento'}</DialogTitle>
+          <DialogDescription>
+            {initialDate
+              ? format(initialDate, "EEEE, d 'de' MMMM", { locale: ptBR })
+              : 'Preencha os detalhes do evento'}
+          </DialogDescription>
         </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="relative flex items-center">
-                      <Type className="absolute left-3 w-5 h-5 text-muted-foreground" />
-                      <Input
-                        placeholder="O que vamos planejar?"
-                        className="pl-10 rounded-[16px] bg-white border-none shadow-sm h-12 text-lg"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="title">Título</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ex: Reunião de equipe"
+              required
             />
+          </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className="relative flex items-center">
-                        <CalendarIcon className="absolute left-3 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          type="date"
-                          className="pl-9 rounded-[16px] bg-white border-none shadow-sm"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="start">Início</Label>
+              <Input
+                id="start"
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                required
               />
-              <div className="flex gap-2">
-                <FormField
-                  control={form.control}
-                  name="startTime"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        <Input
-                          type="time"
-                          className="rounded-[16px] bg-white border-none shadow-sm text-center px-1"
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="endTime"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        <Input
-                          type="time"
-                          className="rounded-[16px] bg-white border-none shadow-sm text-center px-1"
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="end">Fim</Label>
+              <Input
+                id="end"
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-            <FormField
-              control={form.control}
-              name="categoryId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground ml-1">
-                    Categoria
-                  </FormLabel>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {categories.map((cat) => (
+          <div className="grid gap-2">
+            <Label htmlFor="category">Categoria</Label>
+            <Select value={categoryId} onValueChange={setCategoryId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione uma categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    <div className="flex items-center gap-2">
                       <div
-                        key={cat.id}
-                        onClick={() => field.onChange(cat.id)}
-                        className={cn(
-                          'cursor-pointer px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border-2',
-                          field.value === cat.id
-                            ? 'scale-105 shadow-md'
-                            : 'opacity-60 hover:opacity-100 border-transparent bg-white',
-                        )}
-                        style={{
-                          backgroundColor:
-                            field.value === cat.id ? cat.color : undefined,
-                          color: field.value === cat.id ? '#FFF' : cat.color,
-                          borderColor: cat.color,
-                        }}
-                      >
-                        {cat.name}
-                      </div>
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="relative">
-                      <Textarea
-                        placeholder="Adicione notas ou detalhes..."
-                        className="pl-4 rounded-[16px] bg-white border-none shadow-sm resize-none min-h-[80px]"
-                        {...field}
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: category.color }}
                       />
+                      {category.name}
                     </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-            <FormField
-              control={form.control}
-              name="reminder"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-[16px] bg-white p-3 shadow-sm">
-                  <div className="space-y-0.5 flex items-center gap-2">
-                    <Bell className="w-4 h-4 text-primary" />
-                    <FormLabel className="text-base cursor-pointer">
-                      Lembrete
-                    </FormLabel>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
+          <div className="grid gap-2">
+            <Label htmlFor="description">Descrição</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Detalhes adicionais..."
             />
+          </div>
 
-            <DialogFooter className="mt-6">
+          <DialogFooter className="flex justify-between sm:justify-between">
+            {eventId && (
               <Button
-                type="submit"
-                className={cn(
-                  'w-full rounded-pill h-12 text-lg font-semibold bg-primary hover:bg-primary/90 transition-all duration-300',
-                  isAnimating && 'scale-95 opacity-80',
-                )}
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={handleDelete}
               >
-                {existingEvent ? 'Salvar Alterações' : 'Criar Evento'}
+                <Trash2 className="h-4 w-4" />
               </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+            )}
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button type="submit">Salvar</Button>
+            </div>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   )

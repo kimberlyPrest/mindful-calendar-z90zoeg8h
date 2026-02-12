@@ -13,6 +13,15 @@ import {
 import { ptBR } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 import { EventModal } from '@/components/EventModal'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Plus,
+  Play,
+  Quote,
+  Clock,
+} from 'lucide-react'
 
 export default function WeekPage() {
   const { events, viewDate, setViewDate, categories } = useCalendarStore()
@@ -56,9 +65,7 @@ export default function WeekPage() {
                 onClick={handlePrevMonth}
                 className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
               >
-                <span className="material-icons-round text-lg">
-                  chevron_left
-                </span>
+                <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={handleTodayBtn}
@@ -70,17 +77,13 @@ export default function WeekPage() {
                 onClick={handleNextMonth}
                 className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
               >
-                <span className="material-icons-round text-lg">
-                  chevron_right
-                </span>
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
-              <span className="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                search
-              </span>
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
               <input
                 className="pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-full text-sm w-64 shadow-sm focus:ring-2 focus:ring-primary/50 placeholder-slate-400 dark:text-white"
                 placeholder="Pesquisar..."
@@ -91,7 +94,7 @@ export default function WeekPage() {
               onClick={() => setIsCreateOpen(true)}
               className="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-primary/30 flex items-center gap-2 transition-all transform active:scale-95"
             >
-              <span className="material-icons-round text-xl leading-none">add</span>
+              <Plus className="w-5 h-5" />
               <span>Novo Evento</span>
             </button>
           </div>
@@ -101,7 +104,7 @@ export default function WeekPage() {
         <div className="flex-1 overflow-y-auto p-4 lg:p-8 pt-2">
           <div className="flex-1 overflow-x-auto pb-4 hide-scrollbar">
             <div className="flex gap-4 min-w-max h-full">
-              {days.map((day, index) => {
+              {days.map((day) => {
                 const dayEvents = events.filter((e) =>
                   isSameDay(new Date(e.start), day),
                 )
@@ -137,18 +140,21 @@ export default function WeekPage() {
                         {format(day, 'd')}
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex-1 px-4 space-y-3 overflow-y-auto custom-scrollbar">
-                    {dayEvents.length === 0 ? (
-                      <div className="h-full flex flex-col items-center justify-center opacity-30 group-hover:opacity-50 transition-all py-10">
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mb-3" />
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Livre</span>
-                      </div>
-                    ) : (
-                      dayEvents.map((event) => {
-                        const category = categories.find((c) => c.id === event.categoryId)
-                        const color = category?.color || '#cbd5e1'
+                    <div className="flex-1 px-4 space-y-3 overflow-y-auto custom-scrollbar">
+                      {dayEvents.length === 0 ? (
+                        <div className="h-full flex flex-col items-center justify-center opacity-30 group-hover:opacity-50 transition-all py-10">
+                          <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mb-3" />
+                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">
+                            Livre
+                          </span>
+                        </div>
+                      ) : (
+                        dayEvents.map((event) => {
+                          const category = categories.find(
+                            (c) => c.id === event.categoryId,
+                          )
+                          const color = category?.color || '#cbd5e1'
 
                           return (
                             <div
@@ -189,23 +195,25 @@ export default function WeekPage() {
                           )
                         })
                       )}
+
+                      {/* Small Add Button at end of list */}
+                      <div className="p-2 opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
+                        <button className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary hover:text-white text-slate-400 flex items-center justify-center transition-all">
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="p-2 opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
-                      <button className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary hover:text-white text-slate-400 flex items-center justify-center transition-all">
-                        <span className="material-icons-round text-sm">
-                          add
-                        </span>
+
+                    {/* Footer Add Button */}
+                    <div className="p-4 opacity-0 group-hover:opacity-100 transition-all flex justify-center mt-auto">
+                      <button className="w-10 h-10 rounded-2xl bg-slate-50 dark:bg-slate-800 hover:bg-primary hover:text-white text-slate-400 flex items-center justify-center transition-all shadow-sm transform hover:scale-110 active:scale-95">
+                        <Plus className="w-5 h-5" />
                       </button>
                     </div>
                   </div>
-                  <div className="p-4 opacity-0 group-hover:opacity-100 transition-all flex justify-center mt-auto">
-                    <button className="w-10 h-10 rounded-2xl bg-slate-50 dark:bg-slate-800 hover:bg-primary hover:text-white text-slate-400 flex items-center justify-center transition-all shadow-sm transform hover:scale-110 active:scale-95">
-                      <span className="material-icons-round text-xl leading-none">add</span>
-                    </button>
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -232,7 +240,7 @@ export default function WeekPage() {
               <div className="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
             </div>
             <button className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-2xl font-bold shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-3 transform active:scale-95 leading-none">
-              <span className="material-icons-round text-xl leading-none">play_arrow</span>
+              <Play className="w-5 h-5" />
               Iniciar foco
             </button>
           </div>
@@ -282,9 +290,7 @@ export default function WeekPage() {
                       {event.title}
                     </h4>
                     <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs">
-                      <span className="material-icons-round text-sm">
-                        schedule
-                      </span>
+                      <Clock className="w-4 h-4" />
                       {format(new Date(event.start), 'HH:mm')} -{' '}
                       {format(new Date(event.end), 'HH:mm')}
                     </div>
@@ -300,9 +306,7 @@ export default function WeekPage() {
         </div>
 
         <div className="mt-auto bg-muted-yellow/30 dark:bg-yellow-900/10 p-5 rounded-2xl border border-yellow-100 dark:border-yellow-800/30">
-          <span className="material-icons-round text-yellow-600/50 dark:text-yellow-500/50 text-3xl mb-2 block">
-            format_quote
-          </span>
+          <Quote className="text-yellow-600/50 dark:text-yellow-500/50 w-8 h-8 mb-2 block" />
           <p className="text-sm font-medium text-slate-700 dark:text-slate-300 italic mb-2">
             "The present moment is filled with joy and happiness. If you are
             attentive, you will see it."

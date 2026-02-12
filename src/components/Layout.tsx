@@ -19,7 +19,9 @@ function MainLayout() {
         {/* Logo Area */}
         <div className="mb-12">
           <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/30 transform hover:rotate-6 transition-transform cursor-pointer">
-            <span className="material-icons-round text-3xl leading-none">spa</span>
+            <span className="material-icons-round text-3xl leading-none">
+              spa
+            </span>
           </div>
         </div>
         {/* Nav Items */}

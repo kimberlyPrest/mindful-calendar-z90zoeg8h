@@ -29,7 +29,7 @@ export default function MonthPage() {
   const endDate = endOfWeek(monthEnd, { weekStartsOn: 0 })
 
   const days = eachDayOfInterval({ start: startDate, end: endDate })
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
   const handlePrevMonth = () => setViewDate(subMonths(viewDate, 1))
   const handleNextMonth = () => setViewDate(addMonths(viewDate, 1))
@@ -46,17 +46,16 @@ export default function MonthPage() {
     setIsCreateOpen(true)
   }
 
-  // Today's Flow for right sidebar
   const todayEvents = events
     .filter((event) => isSameDay(new Date(event.start), new Date()))
     .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
 
   return (
-    <div className="h-full flex overflow-hidden">
+    <div className="h-full flex overflow-hidden bg-background-light dark:bg-background-dark">
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Header */}
-        <header className="h-20 px-8 flex items-center justify-between flex-shrink-0 bg-white/50 dark:bg-[#1a2c2e]/50 backdrop-blur-sm sticky top-0 z-10">
+        <header className="h-20 px-8 flex items-center justify-between flex-shrink-0 bg-white/50 dark:bg-[#1a2c2e]/50 backdrop-blur-md sticky top-0 z-10 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-6">
             <h1 className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight capitalize">
               {format(viewDate, 'MMMM yyyy', { locale: ptBR })}
@@ -74,7 +73,7 @@ export default function MonthPage() {
                 onClick={handleTodayBtn}
                 className="text-sm font-semibold px-2 text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
               >
-                Today
+                Hoje
               </button>
               <button
                 onClick={handleNextMonth}
@@ -92,8 +91,8 @@ export default function MonthPage() {
                 search
               </span>
               <input
-                className="pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border-none rounded-full text-sm w-64 shadow-sm focus:ring-2 focus:ring-primary/50 placeholder-slate-400 dark:text-white"
-                placeholder="Search events..."
+                className="pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-full text-sm w-64 shadow-sm focus:ring-2 focus:ring-primary/50 placeholder-slate-400 dark:text-white"
+                placeholder="Pesquisar eventos..."
                 type="text"
               />
             </div>
@@ -101,8 +100,8 @@ export default function MonthPage() {
               onClick={() => setIsCreateOpen(true)}
               className="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-primary/30 flex items-center gap-2 transition-all transform active:scale-95"
             >
-              <span className="material-icons-round text-xl">add</span>
-              <span>New Event</span>
+              <span className="material-icons-round text-xl leading-none">add</span>
+              <span>Novo Evento</span>
             </button>
           </div>
         </header>
@@ -187,16 +186,13 @@ export default function MonthPage() {
                               {format(new Date(event.start), 'HH:mm')}
                             </span>
                           </div>
-                          <div className="text-[10px] font-medium text-slate-700 dark:text-slate-300 truncate">
-                            {event.title}
-                          </div>
-                        </div>
-                      )
-                    })}
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -217,22 +213,22 @@ export default function MonthPage() {
             </p>
             <div className="w-full h-32 mb-6 rounded-2xl bg-white dark:bg-slate-800 overflow-hidden flex items-center justify-center relative">
               <img
-                alt="Abstract illustration"
+                alt="Meditação"
                 className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuALP0jXBtCB2kY2RpHnbN0UIUtKa5RBmgh2A3FVvIM4hdOtmet3HvhqCq20RaWRUS7fifvtJ-NnbgR82mNZimNXisTpLeyIPYxEUI2eA9SsKVYnimgIEEFfIDmHYSiW0RTSOfv6wfPy6D4r7cdwyx1y7EsxVAgvnsih2NtvMJQAqSWWp3yaTNPiqtesZkSjhm61W4c3PjjOZ1ncTgtvwaUoCY91HkdShtfMrudYjmG9T8oWb9sn4-phAMyfi08MHxgG_d0G4gepeok"
+                src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
               />
               <div className="absolute inset-0 bg-primary/10 mix-blend-overlay"></div>
             </div>
-            <button className="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
-              <span className="material-icons-round text-lg">play_arrow</span>
-              Start 5-min Focus
+            <button className="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 transform active:scale-95 leading-none">
+              <span className="material-icons-round text-lg leading-none">play_arrow</span>
+              Iniciar foco de 5m
             </button>
           </div>
         </div>
 
         <div className="mb-8">
           <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
-            Today's Flow
+            Fluxo de Hoje
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
           </h3>
           <div className="flex flex-col gap-4 relative">

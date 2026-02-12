@@ -234,7 +234,7 @@ export default function WeekPage() {
             <div className="w-full h-32 mb-6 rounded-2xl bg-white dark:bg-slate-800 overflow-hidden flex items-center justify-center relative">
               <img
                 alt="Meditação"
-                className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-[2000ms]"
+                className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-1000"
                 src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
               />
               <div className="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>

@@ -1,8 +1,8 @@
-import WeekPage from './WeekPage'
+import MonthPage from './MonthPage'
 
-// Index acts as the default entry point, rendering the Weekly view as specified
+// Index acts as the default entry point, rendering the Month view as specified in the new design
 const Index = () => {
-  return <WeekPage />
+  return <MonthPage />
 }
 
 export default Index

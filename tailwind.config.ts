@@ -26,8 +26,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Quicksand', 'Outfit', 'Inter var', 'system-ui', 'sans-serif'],
+        sans: ['Manrope', 'Quicksand', 'Outfit', 'Inter var', 'system-ui', 'sans-serif'],
         display: [
+          'Manrope',
           'Quicksand',
           'Outfit',
           'SF Pro Display',
@@ -42,9 +43,16 @@ export default {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: '#17bfcf',
+          foreground: '#ffffff',
+          dark: '#1299a6',
         },
+        "background-light": "#f6f8f8",
+        "background-dark": "#112021",
+        "warm-orange": "#ffd8be",
+        "soft-blue": "#ccebf3",
+        "muted-yellow": "#fcf5c7",
+        "calm-purple": "#e0dcf5",
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
@@ -90,13 +98,16 @@ export default {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
+        lg: '1rem',
+        md: '0.5rem',
         sm: 'calc(var(--radius) - 4px)',
         pill: '9999px',
+        xl: '1.5rem',
+        '2xl': '2rem',
       },
       boxShadow: {
-        soft: '0 10px 40px -10px rgba(0,0,0,0.08)',
+        soft: '0 4px 20px -2px rgba(23, 191, 207, 0.1)',
+        card: '0 10px 40px -10px rgba(0,0,0,0.05)',
         float:
           '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
       },
